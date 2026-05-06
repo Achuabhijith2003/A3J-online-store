@@ -7,6 +7,7 @@ import './App.css'
 // ==========================================
 // In your real project, you will import the actual files like this:
 import LoginPage from './Admin/Auth/Login.tsx';
+import Dashboard from './Admin/pages/dashboard.tsx';
 import UserLoginPage from './Users/Auth/userLogin.tsx';
 // import Home from './pages/Home';
 // import ProductList from './pages/ProductList';
@@ -143,6 +144,7 @@ export default function App() {
         {/* PROTECTED ADMIN ROUTES */}
         {/* Note: In a real app, wrap AdminDashboard in a <ProtectedRoute> */}
         <Route path="/admin/login" element={<Layout><LoginPage /></Layout>} />
+        <Route path="/admin/dashboard" element={<Layout><Dashboard /></Layout>} />
         
         {/* 404 CATCH-ALL */}
         <Route path="*" element={<Navigate to="/" replace />} />
