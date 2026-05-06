@@ -36,7 +36,7 @@ export const Sidebar = ({ activePage = 'Overview' }: { activePage?: string }) =>
       <div>
         {/* Header/Logo Area */}
         <div className={`h-20 flex items-center border-b border-gray-200 ${isExpanded ? 'px-6 justify-between' : 'justify-center'}`}>
-          {isExpanded && <h1 className="text-xl font-bold tracking-tight truncate">HCM Brand</h1>}
+          {isExpanded && <h1 className="text-xl font-bold tracking-tight truncate">A3J Admin Portal</h1>}
           <button 
             onClick={() => setIsExpanded(!isExpanded)} 
             className="p-2 rounded-sm hover:bg-gray-100 text-gray-500 hover:text-black transition-colors focus:outline-none focus:ring-1 focus:ring-black"

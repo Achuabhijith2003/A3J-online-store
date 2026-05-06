@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, } from 'react-router-dom';
 import './App.css'
 
@@ -12,11 +11,17 @@ import Dashboard from './Admin/pages/dashboard.tsx';
 import ProductsPage from './Admin/pages/Product.tsx';
 import OrdersPage from './Admin/pages/order.tsx';
 import CustomersPage from './Admin/pages/custemer.tsx';
+import {Layout} from './components/layout/admin.tsx';
+import {UserLayout} from './components/layout/user.tsx';
+
+
 
 
 
 // user pages
 import UserLoginPage from './Users/Auth/userLogin.tsx';
+import Home from './Users/pages/Homepage.tsx';
+
 
 
 // common page
@@ -28,22 +33,6 @@ import NotFoundPage from './404.tsx';
 // ==========================================
 // PLACEHOLDER COMPONENTS (Until you build them)
 // ==========================================
-const Home = () => (
-  <div className="text-center py-24">
-    <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-black mb-6">
-      Welcome to High-Contrast Monochrome
-    </h1>
-    <p className="text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
-      Experience the pinnacle of minimalist design. Our products speak for themselves, framed by a distraction-free environment.
-    </p>
-    <Link 
-      to="/products" 
-      className="bg-black text-white px-6 py-3 hover:bg-gray-800 transition-colors rounded-sm inline-block font-medium"
-    >
-      Shop Now
-    </Link>
-  </div>
-);
 
 const ProductList = () => (
   <div>
@@ -78,65 +67,6 @@ const Cart = () => (
   </div>
 );
 
-// const AdminDashboard = () => (
-//   <div className="bg-gray-50 -mx-4 -my-16 px-4 py-16 min-h-[calc(100vh-73px)]">
-//     <div className="max-w-7xl mx-auto">
-//       <h1 className="text-3xl font-bold tracking-tight text-black mb-8">Admin Dashboard</h1>
-//       <div className="bg-white border border-gray-200 rounded-sm p-8">
-//         <p className="text-gray-600 mb-6">Secure dashboard for managing orders and inventory.</p>
-//         <div className="flex gap-4">
-//           <span className="px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-medium rounded-sm">
-//             System Operational
-//           </span>
-//           <span className="px-3 py-1 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-medium rounded-sm">
-//             3 Pending Orders
-//           </span>
-//         </div>
-//       </div>
-//     </div>
-//   </div>
-// );
-
-// We are simulating the LoginPage you just created so the router works
-// const LoginPage = () => (
-//   <div className="max-w-md mx-auto text-center mt-16 border border-gray-200 p-12 bg-white">
-//     <h1 className="text-3xl font-bold tracking-tight text-black mb-4">Login Page</h1>
-//     <p className="text-gray-500 mb-8 leading-relaxed">
-//       This is where your monochrome login form goes.
-//     </p>
-//     <Link 
-//       to="/admin" 
-//       className="bg-black text-white px-6 py-3 hover:bg-gray-800 transition-colors rounded-sm inline-block font-medium w-full"
-//     >
-//       Simulate Login
-//     </Link>
-//   </div>
-// );
-
-// A simple layout wrapper for a Navigation Bar
-const Layout = ({ children }: { children: React.ReactNode }) => (
-  <div className="min-h-screen flex flex-col font-sans bg-white">
-    {/* Sticky Navigation Bar */}
-    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
-      <div className="flex justify-between items-center max-w-7xl w-full mx-auto px-4 py-4">
-        <Link to="/" className="font-bold tracking-tight text-xl text-black">
-          A3J
-        </Link>
-        <div className="space-x-8 text-sm font-medium">
-          <Link to="/products" className="text-gray-500 hover:text-black transition-colors">Products</Link>
-          <Link to="/cart" className="text-gray-500 hover:text-black transition-colors">Cart</Link>
-          <Link to="/login" className="text-gray-500 hover:text-black transition-colors">Login</Link>
-        </div>
-      </div>
-    </nav>
-    
-    {/* Main Content Area with generous whitespace */}
-    <main className="flex-grow max-w-7xl mx-auto w-full px-4 my-16">
-      {children}
-    </main>
-  </div>
-);
-
 // ==========================================
 // MAIN APP ROUTER
 // ==========================================
@@ -146,7 +76,7 @@ export default function App() {
       <Routes>
         
         {/* PUBLIC STOREFRONT ROUTES */}
-        <Route path="/" element={<Layout><Home /></Layout>} />
+        <Route path="/" element={<UserLayout><Home /></UserLayout>} />
         <Route path="/products" element={<Layout><ProductList /></Layout>} />
         <Route path="/cart" element={<Layout><Cart /></Layout>} />
         
