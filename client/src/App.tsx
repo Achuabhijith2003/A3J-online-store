@@ -1,17 +1,25 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, } from 'react-router-dom';
 import './App.css'
 
 // ==========================================
 // IMPORT YOUR PAGES HERE
 // ==========================================
-// In your real project, you will import the actual files like this:
+
+// admin Pages
 import LoginPage from './Admin/Auth/Login.tsx';
 import Dashboard from './Admin/pages/dashboard.tsx';
+import ProductsPage from './Admin/pages/Product.tsx';
+
+// user pages
 import UserLoginPage from './Users/Auth/userLogin.tsx';
-// import Home from './pages/Home';
-// import ProductList from './pages/ProductList';
-// import AdminDashboard from './pages/admin/AdminDashboard';
+
+
+// common page
+
+import NotFoundPage from './404.tsx';
+
+
 
 // ==========================================
 // PLACEHOLDER COMPONENTS (Until you build them)
@@ -145,9 +153,10 @@ export default function App() {
         {/* Note: In a real app, wrap AdminDashboard in a <ProtectedRoute> */}
         <Route path="/admin/login" element={<Layout><LoginPage /></Layout>} />
         <Route path="/admin/dashboard" element={<Layout><Dashboard /></Layout>} />
+        <Route path="/admin/products" element={<Layout><ProductsPage /></Layout>} />
         
         {/* 404 CATCH-ALL */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFoundPage />} />
         
       </Routes>
     </Router>
