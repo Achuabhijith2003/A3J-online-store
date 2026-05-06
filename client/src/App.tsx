@@ -10,6 +10,10 @@ import './App.css'
 import LoginPage from './Admin/Auth/Login.tsx';
 import Dashboard from './Admin/pages/dashboard.tsx';
 import ProductsPage from './Admin/pages/Product.tsx';
+import OrdersPage from './Admin/pages/order.tsx';
+import CustomersPage from './Admin/pages/custemer.tsx';
+
+
 
 // user pages
 import UserLoginPage from './Users/Auth/userLogin.tsx';
@@ -154,7 +158,9 @@ export default function App() {
         <Route path="/admin/login" element={<Layout><LoginPage /></Layout>} />
         <Route path="/admin/dashboard" element={<Layout><Dashboard /></Layout>} />
         <Route path="/admin/products" element={<Layout><ProductsPage /></Layout>} />
-        
+        <Route path="/admin/orders" element={<Layout><OrdersPage /></Layout>} />
+        <Route path="/admin/customers" element={<Layout><CustomersPage /></Layout>} />
+
         {/* 404 CATCH-ALL */}
         <Route path="*" element={<NotFoundPage />} />
         
