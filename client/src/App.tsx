@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route,  } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, } from 'react-router-dom';
 import './App.css'
 
 // ==========================================
@@ -11,7 +11,7 @@ import Dashboard from './Admin/pages/dashboard.tsx';
 import ProductsPage from './Admin/pages/Product.tsx';
 import OrdersPage from './Admin/pages/order.tsx';
 import CustomersPage from './Admin/pages/custemer.tsx';
-import {Layout} from './components/layout/admin.tsx';
+import { Layout } from './components/layout/admin.tsx';
 
 
 
@@ -19,8 +19,9 @@ import {Layout} from './components/layout/admin.tsx';
 import UserLoginPage from './Users/Auth/userLogin.tsx';
 import Home from './Users/pages/Homepage.tsx';
 import ProductDetails from './Users/pages/products.tsx';
-import {UserLayout} from './components/layout/user.tsx';
+import { UserLayout } from './components/layout/user.tsx';
 import CartPage from './Users/pages/cart.tsx';
+import  Checkout  from "./Users/pages/payment.tsx";
 
 
 // common page
@@ -34,12 +35,13 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        
+
         {/* PUBLIC STOREFRONT ROUTES */}
         <Route path="/" element={<UserLayout><Home /></UserLayout>} />
-        <Route path="/products" element={<Layout><ProductDetails /></Layout>} />
-        <Route path="/cart" element={<Layout><CartPage /></Layout>} />
-        
+        <Route path="/products" element={<UserLayout><ProductDetails /></UserLayout>} />
+        <Route path="/cart" element={<UserLayout><CartPage /></UserLayout>} />
+        <Route path="/checkout" element={<UserLayout><Checkout /></UserLayout>} />
+
         {/* AUTHENTICATION ROUTE */}
         <Route path="/login" element={<Layout><UserLoginPage /></Layout>} />
 
@@ -53,7 +55,7 @@ export default function App() {
 
         {/* 404 CATCH-ALL */}
         <Route path="*" element={<NotFoundPage />} />
-        
+
       </Routes>
     </Router>
   );
