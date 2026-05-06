@@ -7,6 +7,7 @@ import './App.css'
 // ==========================================
 // In your real project, you will import the actual files like this:
 import LoginPage from './Admin/Auth/Login.tsx';
+import UserLoginPage from './Users/Auth/userLogin.tsx';
 // import Home from './pages/Home';
 // import ProductList from './pages/ProductList';
 // import AdminDashboard from './pages/admin/AdminDashboard';
@@ -64,24 +65,24 @@ const Cart = () => (
   </div>
 );
 
-const AdminDashboard = () => (
-  <div className="bg-gray-50 -mx-4 -my-16 px-4 py-16 min-h-[calc(100vh-73px)]">
-    <div className="max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold tracking-tight text-black mb-8">Admin Dashboard</h1>
-      <div className="bg-white border border-gray-200 rounded-sm p-8">
-        <p className="text-gray-600 mb-6">Secure dashboard for managing orders and inventory.</p>
-        <div className="flex gap-4">
-          <span className="px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-medium rounded-sm">
-            System Operational
-          </span>
-          <span className="px-3 py-1 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-medium rounded-sm">
-            3 Pending Orders
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-);
+// const AdminDashboard = () => (
+//   <div className="bg-gray-50 -mx-4 -my-16 px-4 py-16 min-h-[calc(100vh-73px)]">
+//     <div className="max-w-7xl mx-auto">
+//       <h1 className="text-3xl font-bold tracking-tight text-black mb-8">Admin Dashboard</h1>
+//       <div className="bg-white border border-gray-200 rounded-sm p-8">
+//         <p className="text-gray-600 mb-6">Secure dashboard for managing orders and inventory.</p>
+//         <div className="flex gap-4">
+//           <span className="px-3 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-medium rounded-sm">
+//             System Operational
+//           </span>
+//           <span className="px-3 py-1 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-medium rounded-sm">
+//             3 Pending Orders
+//           </span>
+//         </div>
+//       </div>
+//     </div>
+//   </div>
+// );
 
 // We are simulating the LoginPage you just created so the router works
 // const LoginPage = () => (
@@ -137,11 +138,11 @@ export default function App() {
         <Route path="/cart" element={<Layout><Cart /></Layout>} />
         
         {/* AUTHENTICATION ROUTE */}
-        <Route path="/login" element={<Layout><LoginPage /></Layout>} />
+        <Route path="/login" element={<Layout><UserLoginPage /></Layout>} />
 
         {/* PROTECTED ADMIN ROUTES */}
         {/* Note: In a real app, wrap AdminDashboard in a <ProtectedRoute> */}
-        <Route path="/admin" element={<Layout><AdminDashboard /></Layout>} />
+        <Route path="/admin/login" element={<Layout><LoginPage /></Layout>} />
         
         {/* 404 CATCH-ALL */}
         <Route path="*" element={<Navigate to="/" replace />} />
