@@ -21,3 +21,7 @@ curl -X POST http://localhost:10000/api/auth/login \
   -F "status=Active" \
   -F "image=@<IMAGE_PATH>"
   ```
+## Show Product
+```
+curl http://localhost:10000/api/products
+```

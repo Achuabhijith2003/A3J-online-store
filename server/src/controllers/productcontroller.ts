@@ -49,3 +49,22 @@ export const createProductHandler = async (req: Request, res: Response): Promise
     res.status(500).json({ error: 'Internal server error while creating product.' });
   }
 };
+
+
+// Handle fetching all products (NEW)
+export const getAllProductsHandler = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const products = await productModel.getAllProducts();
+    
+    logger.info(`Fetched ${products.length} products successfully.`);
+    
+    res.status(200).json({
+      message: 'Products retrieved successfully',
+      products: products
+    });
+
+  } catch (error: any) {
+    logger.error(`Error fetching products: ${error.message}`);
+    res.status(500).json({ error: 'Internal server error while fetching products.' });
+  }
+};

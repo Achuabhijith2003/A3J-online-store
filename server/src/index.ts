@@ -39,7 +39,7 @@ app.use(
 // API ROUTES
 // ==========================================
 app.get('/api/health', (req: Request, res: Response) => {
-  res.send('HCM Brand Backend is running securely with TypeScript!');
+  res.send('A3J Backend is running securely with TypeScript!');
 });
 
 // Use Auth Routes

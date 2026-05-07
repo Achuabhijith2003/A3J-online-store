@@ -47,3 +47,18 @@ export const createProduct = async (productData: ProductData) => {
 
   return data;
 };
+
+
+// 3. Fetch all products from the database
+export const getAllProducts = async () => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .order('created_at', { ascending: false }); // Newest products show up first
+
+  if (error) {
+    throw new Error(`Database Error: ${error.message}`);
+  }
+
+  return data;
+};
