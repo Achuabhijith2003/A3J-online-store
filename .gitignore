@@ -147,3 +147,4 @@ vite.config.ts.timestamp-*
 *.mp4
 
 server/api.json
+test

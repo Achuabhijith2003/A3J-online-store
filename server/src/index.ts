@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import authRoutes from './routes/authroutes.js';
+import productRoutes from './routes/productroutes.js';
 import { requireAuth } from './middlewares/authMiddleware.js';
 import { requirePermission } from './middlewares/roleMiddleware.js';
 
@@ -46,7 +47,7 @@ app.use('/api/auth', authRoutes);
 app.get('/api/stats', requireAuth, requirePermission(['read:analytics']), (req, res) => { res.json({ message: "Stats data" }); });
 
 // ONLY users with the "write:products" permission can add new items
-app.post('/api/products', requireAuth, requirePermission(['write:products']), (req, res) => { res.json({ message: "Product created" }); });
+app.use('/api/products', productRoutes);
 
 // ==========================================
 // STATIC FILES & SPA FALLBACK
