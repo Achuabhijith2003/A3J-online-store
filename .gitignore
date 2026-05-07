@@ -145,3 +145,5 @@ vite.config.ts.timestamp-*
 
 # video file
 *.mp4
+
+server/api.json
