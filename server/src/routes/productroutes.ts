@@ -18,6 +18,7 @@ router.get('/', getAllProductsHandler);
 
 // POST /api/products
 // Requires: 1. Login, 2. 'write:products' permission, 3. parses the 'image' file
+// for admin
 router.post(
   '/addproducts', 
   requireAuth, 

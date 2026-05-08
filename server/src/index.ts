@@ -3,8 +3,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
 import cors from 'cors';
+
+
 import authRoutes from './routes/authroutes.js';
 import productRoutes from './routes/productroutes.js';
+import cartRoutes from './routes/Cartroutes.js';
+
+
 import { requireAuth } from './middlewares/authMiddleware.js';
 import { requirePermission } from './middlewares/roleMiddleware.js';
 
@@ -48,6 +53,7 @@ app.get('/api/stats', requireAuth, requirePermission(['read:analytics']), (req, 
 
 // ONLY users with the "write:products" permission can add new items
 app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRoutes);
 
 // ==========================================
 // STATIC FILES & SPA FALLBACK
