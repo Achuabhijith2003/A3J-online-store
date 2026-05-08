@@ -15,6 +15,7 @@ const upload = multer({
 // GET /api/products
 // Public route so customers can see the store catalog! (NEW)
 router.get('/', getAllProductsHandler);
+router.get('/:productId', getAllProductsHandler);
 
 // POST /api/products
 // Requires: 1. Login, 2. 'write:products' permission, 3. parses the 'image' file

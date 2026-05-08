@@ -4,11 +4,8 @@ import logger from '../utils/logger.js';
 
 export const createProductHandler = async (req: Request, res: Response): Promise<void> => {
   try {
-    // 1. Extract text fields from the request body
     const { name, description, price, stock, status } = req.body;
-    
-    // 2. Extract the uploaded file (handled by Multer middleware)
-    const file = (req as any).file;
+    const file = req.file;
 
     if (!name || !price || !stock) {
       res.status(400).json({ error: 'Name, price, and stock are required fields.' });
@@ -17,7 +14,6 @@ export const createProductHandler = async (req: Request, res: Response): Promise
 
     let imageUrl = '';
 
-    // 3. If an image was uploaded, send it to Supabase Storage first
     if (file) {
       imageUrl = await productModel.uploadProductImage(
         file.buffer, 
@@ -27,7 +23,6 @@ export const createProductHandler = async (req: Request, res: Response): Promise
       logger.info(`Image uploaded successfully: ${imageUrl}`);
     }
 
-    // 4. Save everything to the Supabase SQL Database
     const newProduct = await productModel.createProduct({
       name,
       description,
@@ -68,3 +63,21 @@ export const getAllProductsHandler = async (req: Request, res: Response): Promis
     res.status(500).json({ error: 'Internal server error while fetching products.' });
   }
 };
+
+// Handle fetching a single product
+export const getSingleProductHandler = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { productId } = req.params;
+    const product = await productModel.getProductById(productId as string);
+    
+    logger.info(`Fetched product ${productId} successfully.`);
+    
+    res.status(200).json({
+      message: 'Product retrieved successfully',
+      product: product
+    });
+
+  } catch (error: any) {
+    logger.error(`Error fetching single product:`,error);
+  } 
+}

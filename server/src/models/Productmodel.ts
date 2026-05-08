@@ -62,3 +62,18 @@ export const getAllProducts = async () => {
 
   return data;
 };
+
+// 4. Fetch single products
+export const getProductById = async (id: string) => {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) {
+    throw new Error(`Database Error: ${error.message}`);
+  }
+
+  return data;
+};

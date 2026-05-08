@@ -25,6 +25,13 @@ curl -X POST http://localhost:10000/api/auth/login \
 ```
 curl http://localhost:10000/api/products
 ```
+## show single product
+```
+curl -X GET http://localhost:10000/api/products/YOUR_PRODUCT_ID_HERE
+
+Because it is a public GET route, you can also paste `http://localhost:10000/api/products/YOUR_PRODUCT_ID_HERE` directly into your web browser to see the product details!
+```
+
 
 ## Add to cart
 ```
@@ -61,12 +68,11 @@ curl -X DELETE http://localhost:10000/api/cart/remove/YOUR_PRODUCT_ID_HERE \
 
 
 
-curl -X PUT http://localhost:10000/api/cart/update \
-  -H "Authorization: Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6IjAxNGI2ZDIwLTZhYjYtNDQ2MS1hMzM5LThjN2Q4NGRmYjNkMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3dqanhwbmpjcnZmdmlnb2tscml0LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI1YjYwMzExYi0xNWQ2LTQ3MDktOWI4ZS1jNjM0ZTM1ZDkzYmYiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc4MjE3Njc4LCJpYXQiOjE3NzgyMTQwNzgsImVtYWlsIjoianJkZXZsb3BlcjIwMDNAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NzgyMTQwNzh9XSwic2Vzc2lvbl9pZCI6ImYxZDZmNDI4LTViYmYtNDBmMi1hZTkwLTMwZGZhMzBlMTQzYyIsImlzX2Fub255bW91cyI6ZmFsc2V9.9U9_6LjbKx4HsqyJidi6SXpiBMo0WVGabne8q6MgGyywxW9eAFNuhyZ5OoJ9r3k0HEZPITzhDXcYzIl0EjmjLQ " \
-  -H "Content-Type: application/json" \
-  -d '{"productId": "a0c01d06-812f-4136-8c8a-47af29b27f84", "quantity": 2}'.
 
-
-
-  curl -X DELETE http://localhost:10000/api/cart/remove/a0c01d06-812f-4136-8c8a-47af29b27f84 \
-  -H "Authorization: Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6IjAxNGI2ZDIwLTZhYjYtNDQ2MS1hMzM5LThjN2Q4NGRmYjNkMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3dqanhwbmpjcnZmdmlnb2tscml0LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI1YjYwMzExYi0xNWQ2LTQ3MDktOWI4ZS1jNjM0ZTM1ZDkzYmYiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc4MjE3Njc4LCJpYXQiOjE3NzgyMTQwNzgsImVtYWlsIjoianJkZXZsb3BlcjIwMDNAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NzgyMTQwNzh9XSwic2Vzc2lvbl9pZCI6ImYxZDZmNDI4LTViYmYtNDBmMi1hZTkwLTMwZGZhMzBlMTQzYyIsImlzX2Fub255bW91cyI6ZmFsc2V9.9U9_6LjbKx4HsqyJidi6SXpiBMo0WVGabne8q6MgGyywxW9eAFNuhyZ5OoJ9r3k0HEZPITzhDXcYzIl0EjmjLQ "
+curl -X POST http://localhost:10000/api/products/addproducts \
+  -H "Authorization: Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6IjAxNGI2ZDIwLTZhYjYtNDQ2MS1hMzM5LThjN2Q4NGRmYjNkMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3dqanhwbmpjcnZmdmlnb2tscml0LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI1YjYwMzExYi0xNWQ2LTQ3MDktOWI4ZS1jNjM0ZTM1ZDkzYmYiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc4MjM4NDg3LCJpYXQiOjE3NzgyMzQ4ODcsImVtYWlsIjoianJkZXZsb3BlcjIwMDNAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NzgyMzQ4ODd9XSwic2Vzc2lvbl9pZCI6ImQxOWU0MDVjLWZhN2UtNDA1NS05ZTMwLTNlOWI5MWZhMmUzOCIsImlzX2Fub255bW91cyI6ZmFsc2V9.f3n3c6LdiTw9V1tC7t0IDBUG2MJ1SJVTw5UTPVW9rsX0dMoPOJUU-OcA0GTkAFtttcIvdXMEsC5Jo-LE2_GWjw " \
+  -F "name=whd " \
+  -F "price=120.00" \
+  -F "stock=15" \
+  -F "status=Active" \
+  -F "image=@E:/A3J-online-store/test/data/Screenshot 2026-04-22 203734.png"
