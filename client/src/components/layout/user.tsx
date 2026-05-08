@@ -1,18 +1,62 @@
-// import { BrowserRouter as Router, Routes, Route, Link, } from 'react-router-dom';
-import  { useState } from 'react';
-import { Search, ShoppingBag, User, Menu } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Search, ShoppingBag, User, Menu, LogOut } from 'lucide-react';
     
-
 export const UserLayout = ({ children }: { children: React.ReactNode }) => {
-  // Mock authentication state to demonstrate the two header types
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Use lazy initialization for state to avoid the effect entirely for this purpose
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return !!localStorage.getItem('token');
+  });
+  
+  // State for managing the dropdown menu visibility
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close the dropdown when clicking anywhere outside of it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Handle manual login/logout toggle for development
+  const handleAuthToggle = () => {
+    if (isLoggedIn) {
+      // Clear token on logout
+      localStorage.removeItem('token');
+      setIsLoggedIn(false);
+      setIsDropdownOpen(false);
+    } else {
+      // Mock login for dev purposes
+      setIsLoggedIn(true);
+    }
+  };
+
+  // Dedicated logout function for the dropdown button
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setIsDropdownOpen(false);
     
+    // Note: If you want this to instantly kick them back to the login page, 
+    // uncomment the line below (or use navigate('/login') if using react-router):
+    // window.location.href = '/login';
+  };
+
   return (
-    <div className="flex flex-col font-sans bg-white">
+    <div className="flex flex-col font-sans bg-white min-h-screen">
+      
+      {/* Dev Tool - Can be removed in production */}
       <div className="fixed bottom-4 right-4 z-50 bg-white border border-gray-200 p-3 shadow-lg rounded-sm text-xs flex items-center gap-3">
         <span className="font-medium">Dev Auth State:</span>
         <button 
-          onClick={() => setIsLoggedIn(!isLoggedIn)}
+          onClick={handleAuthToggle}
           className="bg-black text-white px-3 py-1.5 rounded-sm hover:bg-gray-800 transition"
         >
           {isLoggedIn ? 'Log Out' : 'Log In'}
@@ -22,7 +66,7 @@ export const UserLayout = ({ children }: { children: React.ReactNode }) => {
      {/* ==========================================
           HEADER
       ========================================== */}
-    <header className="sticky top-0 z-40 bg-white border-b border-gray-100 h-20 px-4 md:px-8 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-white border-b border-gray-100 h-20 px-4 md:px-8 flex items-center justify-between">
         
         {/* Left: Brand */}
         <div className="flex-1 flex items-center">
@@ -58,17 +102,46 @@ export const UserLayout = ({ children }: { children: React.ReactNode }) => {
             
             {/* Conditional Auth Rendering */}
             {isLoggedIn ? (
-              <button className="text-black hover:text-gray-600 transition-colors">
-                <User size={20} strokeWidth={1.5} />
-              </button>
+              <div className="relative" ref={dropdownRef}>
+                <button 
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="text-black hover:text-gray-600 transition-colors flex items-center"
+                >
+                  <User size={20} strokeWidth={1.5} />
+                </button>
+
+                {/* Profile Dropdown Menu */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-4 w-48 bg-white border border-gray-200 rounded-sm shadow-lg py-2 z-50">
+                    <div className="px-4 py-2 border-b border-gray-100 mb-1">
+                      <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">My Account</p>
+                    </div>
+                    <a href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors">
+                      Profile
+                    </a>
+                    <a href="/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-black transition-colors">
+                      Order History
+                    </a>
+                    <div className="border-t border-gray-100 mt-2 pt-1">
+                      <button 
+                        onClick={handleLogout}
+                        className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                      >
+                        <LogOut size={16} strokeWidth={2} />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             ) : (
               <div className="hidden md:flex items-center gap-3">
-                <button className="text-xs font-medium uppercase tracking-wide hover:text-gray-600 transition-colors">
+                <a href="/login" className="text-xs font-medium uppercase tracking-wide hover:text-gray-600 transition-colors px-2">
                   Login
-                </button>
-                <button className="bg-black text-white px-4 py-2 text-xs font-medium uppercase tracking-wide rounded-sm hover:bg-gray-800 transition-colors">
+                </a>
+                <a href="/register" className="bg-black text-white px-4 py-2 text-xs font-medium uppercase tracking-wide rounded-sm hover:bg-gray-800 transition-colors inline-block">
                   Sign Up
-                </button>
+                </a>
               </div>
             )}
 
@@ -80,10 +153,10 @@ export const UserLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
       </header>
     
-    {/* Main Content Area with generous whitespace */}
-    <main >
-      {children}
-    </main>
-  </div>
+      {/* Main Content Area with generous whitespace */}
+      <main className="flex-grow">
+        {children}
+      </main>
+    </div>
   );
 };

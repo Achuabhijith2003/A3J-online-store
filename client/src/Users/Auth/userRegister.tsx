@@ -3,55 +3,20 @@ import { Mail, Lock, ShieldCheck, ArrowLeft } from 'lucide-react';
 import {TextField} from '../../components/TextField.tsx'
 import {Button} from '../../components/Button.tsx'
 import {Checkbox} from '../../components/Checkbox.tsx'
-import { useNavigate } from 'react-router-dom';
 
-export default function UserLoginPage() {
+// ==========================================
+// MAIN PAGE COMPONENT
+// ==========================================
+
+export default function UserRegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  
-  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMessage('');
-    setIsLoading(true);
-
-    try {
-      // Connect to the backend API
-      const response = await fetch('http://localhost:10000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        // Handle incorrect password or missing user
-        setErrorMessage(data.error || 'Login failed. Please check your credentials.');
-        setIsLoading(false);
-        return;
-      }
-
-      // Success! Save the token to localStorage
-      console.log("Login Success!", data);
-      if (data.session && data.session.access_token) {
-        localStorage.setItem('token', data.session.access_token);
-      }
-
-      // Redirect the user to the admin dashboard (or storefront)
-      navigate('/');
-
-    } catch (error) {
-      console.error("Network error:", error);
-      setErrorMessage('Network error. Please make sure the server is running.');
-      setIsLoading(false);
-    }
+    console.log("Login Attempt:", { email, password, rememberMe });
+    // Add your auth logic here (e.g., fetch('/api/auth/login'))
   };
 
   return (
@@ -97,13 +62,6 @@ export default function UserLoginPage() {
                   Please enter your credentials to access the dashboard.
                 </p>
               </div>
-
-              {/* Error Message Display */}
-              {errorMessage && (
-                <div className="mb-6 p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-sm font-medium">
-                  {errorMessage}
-                </div>
-              )}
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 
@@ -153,8 +111,8 @@ export default function UserLoginPage() {
                 </div>
 
                 {/* Reusable Button Component */}
-                <Button type="submit" disabled={isLoading}>
-                  {isLoading ? 'Authenticating...' : 'Login to Dashboard'}
+                <Button type="submit">
+                  Login to Dashboard
                 </Button>
               </form>
 

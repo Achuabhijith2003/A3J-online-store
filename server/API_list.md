@@ -81,13 +81,3 @@ curl -X DELETE http://localhost:10000/api/cart/remove/YOUR_PRODUCT_ID_HERE \
 
 ## Checkout
 
-
-
-
-curl -X POST http://localhost:10000/api/products/addproducts \
-  -H "Authorization: Bearer eyJhbGciOiJFUzI1NiIsImtpZCI6IjAxNGI2ZDIwLTZhYjYtNDQ2MS1hMzM5LThjN2Q4NGRmYjNkMiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL3dqanhwbmpjcnZmdmlnb2tscml0LnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI1YjYwMzExYi0xNWQ2LTQ3MDktOWI4ZS1jNjM0ZTM1ZDkzYmYiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzc4MjM4NDg3LCJpYXQiOjE3NzgyMzQ4ODcsImVtYWlsIjoianJkZXZsb3BlcjIwMDNAZ21haWwuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3NzgyMzQ4ODd9XSwic2Vzc2lvbl9pZCI6ImQxOWU0MDVjLWZhN2UtNDA1NS05ZTMwLTNlOWI5MWZhMmUzOCIsImlzX2Fub255bW91cyI6ZmFsc2V9.f3n3c6LdiTw9V1tC7t0IDBUG2MJ1SJVTw5UTPVW9rsX0dMoPOJUU-OcA0GTkAFtttcIvdXMEsC5Jo-LE2_GWjw " \
-  -F "name=whd " \
-  -F "price=120.00" \
-  -F "stock=15" \
-  -F "status=Active" \
-  -F "image=@E:/A3J-online-store/test/data/Screenshot 2026-04-22 203734.png"
