@@ -5,11 +5,26 @@
 curl http://localhost:10000/api/health
 ```
 
+## user registeration
+```
+curl -X POST http://localhost:10000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email": "new.customer@example.com", "password": "SecurePassword123!"}'
+  ```
+
 ## Login as admin
 ```
 curl -X POST http://localhost:10000/api/auth/login \
 -H "Content-Type: application/json" \
 -d '{"email":"jrdevloper2003@gmail.com", "password":"A3JAbhijith"}'
+```
+## Reset password
+```
+curl -X POST http://localhost:10000/api/auth/forgot-password \
+  -H "Content-Type: application/json" \
+  -d '{"email": "your.registered.email@example.com"}'
+
+*(Note: The link included in the email will redirect the user based on the "Site URL" and "Redirect URLs" you have configured in your Supabase Dashboard under Authentication -> URL Configuration.)*
 ```
 ## Add Product
 ```
