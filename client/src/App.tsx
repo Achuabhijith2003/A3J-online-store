@@ -11,12 +11,14 @@ import Dashboard from './Admin/pages/dashboard.tsx';
 import ProductsPage from './Admin/pages/Product.tsx';
 import OrdersPage from './Admin/pages/order.tsx';
 import CustomersPage from './Admin/pages/custemer.tsx';
-import { Layout } from './components/layout/admin.tsx';
+// import { Layout } from './components/layout/admin.tsx';
 
 
 
 // user pages
 import UserLoginPage from './Users/Auth/userLogin.tsx';
+import UserRestPage from './Users/Auth/userPassReset.tsx';
+import UserRegisterPage from './Users/Auth/userRegister.tsx';
 import Home from './Users/pages/Homepage.tsx';
 import ProductDetails from './Users/pages/products.tsx';
 import { UserLayout } from './components/layout/user.tsx';
@@ -43,15 +45,17 @@ export default function App() {
         <Route path="/checkout" element={<UserLayout><Checkout /></UserLayout>} />
 
         {/* AUTHENTICATION ROUTE */}
-        <Route path="/login" element={<Layout><UserLoginPage /></Layout>} />
+        <Route path="/login" element={<UserLoginPage />} />
+        <Route path="register" element={<UserRegisterPage />} />
+        <Route path="/reset-password" element={<UserRestPage />} />
 
         {/* PROTECTED ADMIN ROUTES */}
         {/* Note: In a real app, wrap AdminDashboard in a <ProtectedRoute> */}
-        <Route path="/admin/login" element={<Layout><LoginPage /></Layout>} />
-        <Route path="/admin/dashboard" element={<Layout><Dashboard /></Layout>} />
-        <Route path="/admin/products" element={<Layout><ProductsPage /></Layout>} />
-        <Route path="/admin/orders" element={<Layout><OrdersPage /></Layout>} />
-        <Route path="/admin/customers" element={<Layout><CustomersPage /></Layout>} />
+        <Route path="/admin/login" element={<LoginPage />} />
+        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/products" element={<ProductsPage />} />
+        <Route path="/admin/orders" element={<OrdersPage />} />
+        <Route path="/admin/customers" element={<CustomersPage />} />
 
         {/* 404 CATCH-ALL */}
         <Route path="*" element={<NotFoundPage />} />

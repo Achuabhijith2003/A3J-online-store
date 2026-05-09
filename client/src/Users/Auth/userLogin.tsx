@@ -4,6 +4,7 @@ import {TextField} from '../../components/TextField.tsx'
 import {Button} from '../../components/Button.tsx'
 import {Checkbox} from '../../components/Checkbox.tsx'
 import { useNavigate } from 'react-router-dom';
+import {loginApi} from '../../API/auth';
 
 export default function UserLoginPage() {
   const [email, setEmail] = useState('');
@@ -29,7 +30,7 @@ export default function UserLoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
+      const data = await loginApi(email, password);
 
       if (!response.ok) {
         // Handle incorrect password or missing user
