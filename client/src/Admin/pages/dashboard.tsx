@@ -1,11 +1,6 @@
 // import { useState } from 'react';
 import { 
-  // LayoutGrid, 
-  // ShoppingCart, 
-  // Package, 
   Users, 
-  // BarChart2, 
-  // Settings, 
   Search, 
   Bell, 
   Banknote, 
@@ -14,48 +9,30 @@ import {
   TrendingUp, 
   TrendingDown, 
   Minus,
-  // Menu
 } from 'lucide-react';
 
-import {StatusBadge}  from "../../components/status.tsx" 
+import { StatusBadge } from "../../components/status.tsx"; 
+import { Sidebar } from '../sidemenu.tsx';
+import { Table, type Column } from '../../components/Table.tsx'; // Import the reusable Table
 
-
-import {Sidebar} from '../sidemenu.tsx';
+// --- TYPES ---
+interface RecentOrder {
+  id: string;
+  customer: string;
+  date: string;
+  status: string;
+  total: string;
+}
 
 // --- MOCK DATA ---
-
 const KPIS = [
-  {
-    title: "Total Revenue",
-    value: "$124,500.00",
-    change: "+12.5% from last month",
-    trend: "up",
-    icon: Banknote
-  },
-  {
-    title: "Orders",
-    value: "842",
-    change: "+5.2% from last month",
-    trend: "up",
-    icon: ShoppingBag
-  },
-  {
-    title: "Customers",
-    value: "3,291",
-    change: "— No change",
-    trend: "neutral",
-    icon: Users
-  },
-  {
-    title: "Conversion Rate",
-    value: "3.24%",
-    change: "-1.1% from last month",
-    trend: "down",
-    icon: LineChart
-  }
+  { title: "Total Revenue", value: "$124,500.00", change: "+12.5% from last month", trend: "up", icon: Banknote },
+  { title: "Orders", value: "842", change: "+5.2% from last month", trend: "up", icon: ShoppingBag },
+  { title: "Customers", value: "3,291", change: "— No change", trend: "neutral", icon: Users },
+  { title: "Conversion Rate", value: "3.24%", change: "-1.1% from last month", trend: "down", icon: LineChart }
 ];
 
-const RECENT_ORDERS = [
+const RECENT_ORDERS: RecentOrder[] = [
   { id: "#ORD-9021", customer: "Alice Freeman", date: "Oct 24, 2023", status: "Completed", total: "$340.00" },
   { id: "#ORD-9020", customer: "Michael Chen", date: "Oct 24, 2023", status: "Pending", total: "$125.50" },
   { id: "#ORD-9019", customer: "Sarah Jenkins", date: "Oct 23, 2023", status: "Completed", total: "$890.00" },
@@ -70,16 +47,14 @@ const TOP_PRODUCTS = [
   { name: "Mechanical Keyboard", sales: "62 Sales", price: "$180", img: "https://images.unsplash.com/photo-1595225476474-87563907a212?w=150&q=80&fit=crop" },
 ];
 
-// --- COMPONENTS ---
-
-
-
-/**
- * Reusable Collapsible Sidebar Component
- * Connect it to other pages by passing the `activePage` prop (e.g., activePage="Orders")
- */
-
-// --- MAIN PAGE LAYOUT ---
+// --- TABLE COLUMNS CONFIGURATION ---
+const recentOrderColumns: Column<RecentOrder>[] = [
+  { header: 'Order ID', accessor: 'id', render: (o) => <span className="text-gray-600">{o.id}</span> },
+  { header: 'Customer', accessor: 'customer', render: (o) => <span className="font-medium">{o.customer}</span> },
+  { header: 'Date', accessor: 'date', render: (o) => <span className="text-gray-500">{o.date}</span> },
+  { header: 'Status', accessor: 'status', render: (o) => <StatusBadge status={o.status} /> },
+  { header: 'Total', accessor: 'total', align: 'right', render: (o) => <span className="font-semibold">{o.total}</span> }
+];
 
 export default function Dashboard() {
   return (
@@ -136,36 +111,19 @@ export default function Dashboard() {
           {/* TWO COLUMN SECTION */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
             
-            {/* RECENT ORDERS TABLE */}
+            {/* RECENT ORDERS (USING NEW REUSABLE TABLE) */}
             <div className="lg:col-span-2">
               <div className="flex justify-between items-end mb-6">
                 <h3 className="text-xl font-bold tracking-tight">Recent Orders</h3>
                 <a href="/admin/orders" className="text-sm font-medium text-gray-600 hover:text-black border-b border-gray-300 hover:border-black pb-0.5 transition-all">View All</a>
               </div>
-              <div className="border border-gray-200 rounded-sm overflow-x-auto bg-white">
-                <table className="w-full text-sm text-left whitespace-nowrap">
-                  <thead className="text-gray-500 font-medium border-b border-gray-200 bg-white">
-                    <tr>
-                      <th className="px-6 py-4 font-medium">Order ID</th>
-                      <th className="px-6 py-4 font-medium">Customer</th>
-                      <th className="px-6 py-4 font-medium">Date</th>
-                      <th className="px-6 py-4 font-medium">Status</th>
-                      <th className="px-6 py-4 font-medium text-right">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {RECENT_ORDERS.map((order, index) => (
-                      <tr key={index} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors">
-                        <td className="px-6 py-4 text-gray-600">{order.id}</td>
-                        <td className="px-6 py-4 font-medium">{order.customer}</td>
-                        <td className="px-6 py-4 text-gray-500">{order.date}</td>
-                        <td className="px-6 py-4"><StatusBadge status={order.status} /></td>
-                        <td className="px-6 py-4 font-semibold text-right">{order.total}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              
+              {/* Using the abstracted Table component here! */}
+              <Table 
+                data={RECENT_ORDERS} 
+                columns={recentOrderColumns} 
+              />
+              
             </div>
 
             {/* TOP PRODUCTS LIST */}

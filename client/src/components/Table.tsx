@@ -24,6 +24,7 @@ export function Table<T>({
   columns, 
   keyExtractor = (_, index) => index, 
   onRowClick, 
+
 }: TableProps<T>) {
   return (
     <div className="border border-gray-200 rounded-sm overflow-x-auto bg-white">

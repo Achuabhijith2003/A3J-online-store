@@ -9,15 +9,25 @@ import {
   ChevronRight
 } from 'lucide-react';
 
-import {StatusBadge}  from "../../components/status.tsx" 
+import { StatusBadge } from "../../components/status.tsx"; 
+import { Sidebar } from '../sidemenu.tsx';
+import { Table, type Column } from '../../components/Table.tsx'; // Import reusable Table
 
-
-import {Sidebar} from '../sidemenu.tsx';
+// --- TYPES ---
+interface Order {
+  id: string;
+  customer: string;
+  email: string;
+  date: string;
+  items: number;
+  status: string;
+  total: string;
+}
 
 // ==========================================
 // MOCK DATA
 // ==========================================
-const ORDERS = [
+const ORDERS: Order[] = [
   { id: '#ORD-9025', customer: 'Emma Thompson', email: 'emma.t@example.com', date: 'Oct 26, 2023', items: 2, status: 'Pending', total: '$424.00' },
   { id: '#ORD-9024', customer: 'James Wilson', email: 'j.wilson@example.com', date: 'Oct 26, 2023', items: 1, status: 'Completed', total: '$89.00' },
   { id: '#ORD-9023', customer: 'Sophia Chen', email: 'sophia.c@example.com', date: 'Oct 25, 2023', items: 3, status: 'Completed', total: '$540.00' },
@@ -26,6 +36,25 @@ const ORDERS = [
   { id: '#ORD-9020', customer: 'Michael Chen', email: 'michael.c@example.com', date: 'Oct 24, 2023', items: 1, status: 'Pending', total: '$125.50' },
   { id: '#ORD-9019', customer: 'Sarah Jenkins', email: 'sarah.j@example.com', date: 'Oct 23, 2023', items: 4, status: 'Completed', total: '$890.00' },
   { id: '#ORD-9018', customer: 'David Rossi', email: 'david.r@example.com', date: 'Oct 23, 2023', items: 1, status: 'Cancelled', total: '$45.00' },
+];
+
+// --- TABLE COLUMNS CONFIGURATION ---
+const orderColumns: Column<Order>[] = [
+  { header: 'Order ID', accessor: 'id', render: (o) => <span className="font-medium text-black">{o.id}</span> },
+  { 
+    header: 'Customer', 
+    accessor: 'customer', 
+    render: (o) => (
+      <div className="flex flex-col">
+        <span className="font-medium text-black">{o.customer}</span>
+        <span className="text-xs text-gray-500 mt-0.5">{o.email}</span>
+      </div>
+    ) 
+  },
+  { header: 'Date', accessor: 'date', render: (o) => <span className="text-gray-500">{o.date}</span> },
+  { header: 'Items', accessor: 'items', render: (o) => <span className="text-gray-600">{o.items}</span> },
+  { header: 'Status', accessor: 'status', render: (o) => <StatusBadge status={o.status} /> },
+  { header: 'Total', accessor: 'total', align: 'right', render: (o) => <span className="font-semibold">{o.total}</span> }
 ];
 
 
@@ -85,46 +114,21 @@ export default function OrdersPage() {
             </div>
           </div>
 
-          {/* TABLE CONTAINER */}
-          <div className="border border-gray-200 rounded-sm overflow-x-auto bg-white">
-            <table className="w-full text-sm text-left whitespace-nowrap">
-              <thead className="text-gray-500 border-b border-gray-200 bg-white">
-                <tr>
-                  <th className="px-6 py-4 font-normal">Order ID</th>
-                  <th className="px-6 py-4 font-normal">Customer</th>
-                  <th className="px-6 py-4 font-normal">Date</th>
-                  <th className="px-6 py-4 font-normal">Items</th>
-                  <th className="px-6 py-4 font-normal">Status</th>
-                  <th className="px-6 py-4 font-normal text-right">Total</th>
-                  <th className="px-6 py-4 font-normal"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {ORDERS.map((order, index) => (
-                  <tr key={index} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors group cursor-pointer">
-                    <td className="px-6 py-4 font-medium text-black">{order.id}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col">
-                        <span className="font-medium text-black">{order.customer}</span>
-                        <span className="text-xs text-gray-500 mt-0.5">{order.email}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-gray-500">{order.date}</td>
-                    <td className="px-6 py-4 text-gray-600">{order.items}</td>
-                    <td className="px-6 py-4">
-                      <StatusBadge status={order.status} />
-                    </td>
-                    <td className="px-6 py-4 font-semibold text-right">{order.total}</td>
-                    <td className="px-6 py-4 text-right">
-                      <button className="p-1.5 text-gray-400 hover:text-black rounded-sm hover:bg-gray-100 transition-colors">
-                        <MoreVertical size={18} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          {/* TABLE CONTAINER - USING NEW REUSABLE TABLE */}
+          <Table 
+            data={ORDERS} 
+            columns={orderColumns}
+            
+            // This is how we pass the action button specifically for the Orders page!
+            actions={(order) => (
+              <button 
+                className="p-1.5 text-gray-400 hover:text-black rounded-sm hover:bg-gray-100 transition-colors"
+                title={`Manage Order ${order.id}`}
+              >
+                <MoreVertical size={18} />
+              </button>
+            )}
+          />
 
           {/* PAGINATION FOOTER */}
           <div className="flex justify-between items-center mt-6 text-sm text-gray-500">

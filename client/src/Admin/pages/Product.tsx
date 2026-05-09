@@ -2,13 +2,41 @@ import {
   Search, 
   Bell, 
   Plus,
-  MoreVertical,
-  AlertTriangle,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
 
-import { AdminLayout } from './layout/overview'; // Adjust path as needed
+import { AdminLayout } from './layout/overview';
+import { Table } from '../../components/Table.tsx';
+import { StatusBadge } from "../../components/status";
+
+
+interface Product {
+  id: string;
+  name: string;
+  price: string;
+  stock: number;
+  status: string;
+  img: string;
+}
+
+const ProductColumns = [
+  {
+    header: 'Name',
+    accessor: 'name',
+    render: (Product: Product) => (
+      <div className="flex items-center gap-4">
+        <img src={Product.img} alt={Product.name} className="w-10 h-10 rounded-sm object-cover flex-shrink-0" />
+        <span className="font-medium text-black">{Product.name}</span>
+      </div>
+    )
+  },
+  { header: 'SKU', accessor: 'id', render: (c: Product) => <span className="text-gray-500">{c.id}</span> },
+  { header: 'Stock', accessor: 'stock', align: 'right' as const, render: (c: Product) => <span className="text-gray-700 text-base">{c.stock}</span> },
+  { header: 'Price', accessor: 'price', align: 'right' as const, render: (c: Product) => <span className="font-semibold text-black text-base">{c.price}</span> },
+  { header: 'Status', accessor: 'status', render: (c: Product) => <StatusBadge status={c.status} /> },
+];
+
 
 const PRODUCTS = [
   { id: 'SKU-001', name: 'Minimalist White Chair', price: '$249.00', stock: 45, status: 'Active', img: 'https://images.unsplash.com/photo-1506459225024-1428097a7e18?w=150&q=80&fit=crop' },
@@ -52,56 +80,19 @@ export default function ProductsPage() {
 
       {/* TABLE CONTAINER */}
       <div className="border border-gray-200 rounded-sm overflow-x-auto bg-white">
-        <table className="w-full text-sm text-left whitespace-nowrap">
-          <thead className="text-gray-500 border-b border-gray-200 bg-white">
-            <tr>
-              <th className="px-6 py-4 font-normal">Image</th>
-              <th className="px-6 py-4 font-normal">Product Name</th>
-              <th className="px-6 py-4 font-normal">SKU</th>
-              <th className="px-6 py-4 font-normal">Price</th>
-              <th className="px-6 py-4 font-normal">Stock</th>
-              <th className="px-6 py-4 font-normal">Status</th>
-              <th className="px-6 py-4 font-normal"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {PRODUCTS.map((product, index) => (
-              <tr key={index} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors group">
-                <td className="px-6 py-4">
-                  <div className="w-12 h-12 bg-gray-100 border border-gray-200 rounded-sm overflow-hidden">
-                    <img src={product.img} alt={product.name} className="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500" />
-                  </div>
-                </td>
-                <td className="px-6 py-4 font-medium text-black">{product.name}</td>
-                <td className="px-6 py-4 text-gray-500">{product.id}</td>
-                <td className="px-6 py-4 font-semibold">{product.price}</td>
-                <td className="px-6 py-4">
-                  {product.stock === 0 ? (
-                    <span className="text-red-600 font-semibold">0</span>
-                  ) : product.stock < 5 ? (
-                    <span className="text-red-600 font-semibold flex items-center gap-1">
-                      {product.stock} <AlertTriangle size={14} />
-                    </span>
-                  ) : (
-                    <span className="text-gray-900">{product.stock}</span>
-                  )}
-                </td>
-                <td className="px-6 py-4">
-                  {product.status === 'Active' ? (
-                    <span className="px-2.5 py-1 bg-gray-200 text-gray-700 text-xs font-medium rounded-sm">Active</span>
-                  ) : (
-                    <span className="px-2.5 py-1 bg-white border border-gray-300 text-gray-600 text-xs font-medium rounded-sm">Draft</span>
-                  )}
-                </td>
-                <td className="px-6 py-4 text-right">
-                  <button className="p-1.5 text-gray-400 hover:text-black rounded-sm hover:bg-gray-100 transition-colors">
-                    <MoreVertical size={18} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="border border-gray-200 rounded-sm overflow-x-auto bg-white">
+        <Table
+          data={PRODUCTS}
+          columns={ProductColumns}
+
+          // Optional: Pass an action button or link
+          // actions={(customer) => (
+          //   <a href={`/customers/${customer}`} className="text-blue-600 hover:underline">
+          //     View Profile
+          //   </a>
+          // )}
+        />
+      </div>
       </div>
 
       {/* PAGINATION FOOTER */}
