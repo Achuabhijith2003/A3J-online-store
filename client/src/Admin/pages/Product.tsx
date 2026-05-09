@@ -1,6 +1,6 @@
-import { 
-  Search, 
-  Bell, 
+import {
+  Search,
+  Bell,
   Plus,
   ChevronLeft,
   ChevronRight,
@@ -9,6 +9,7 @@ import {
 import { AdminLayout } from './layout/overview';
 import { Table } from '../../components/Table.tsx';
 import { StatusBadge } from "../../components/status";
+import { useNavigate } from "react-router-dom";
 
 
 interface Product {
@@ -46,11 +47,12 @@ const PRODUCTS = [
 ];
 
 export default function ProductsPage() {
-  
+  const navigate = useNavigate();
+
   // Define what goes on the right side of the header for this specific page
   const headerActions = (
     <>
-      <button className="text-gray-500 hover:text-black transition-colors relative">
+      <button className="text-gray-500 hover:text-black transition-colors relative" onClick={() => navigate("/admin/products/addproduct")}>
         <Bell className="w-5 h-5" />
       </button>
       <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-medium text-sm cursor-pointer hover:bg-gray-300 transition-colors">
@@ -61,18 +63,18 @@ export default function ProductsPage() {
 
   return (
     <AdminLayout activePage="Products" headerTitle="Products" headerActions={headerActions}>
-      
+
       {/* TOOLBAR */}
       <div className="flex justify-between items-center mb-6">
         <div className="relative w-full max-w-md">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search inventory..." 
+          <input
+            type="text"
+            placeholder="Search inventory..."
             className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-sm bg-white focus:border-black focus:ring-1 focus:ring-black outline-none text-sm transition-all placeholder:text-gray-400"
           />
         </div>
-        <button className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-sm text-sm font-medium hover:bg-gray-800 transition-colors">
+        <button className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-sm text-sm font-medium hover:bg-gray-800 transition-colors" onClick={() => navigate("/admin/products/addproduct")}>
           <Plus size={16} />
           Add Product
         </button>
@@ -81,9 +83,9 @@ export default function ProductsPage() {
       {/* TABLE CONTAINER */}
       <div className="border border-gray-200 rounded-sm overflow-x-auto bg-white">
         <div className="border border-gray-200 rounded-sm overflow-x-auto bg-white">
-        <Table
-          data={PRODUCTS}
-          columns={ProductColumns}
+          <Table
+            data={PRODUCTS}
+            columns={ProductColumns}
 
           // Optional: Pass an action button or link
           // actions={(customer) => (
@@ -91,8 +93,8 @@ export default function ProductsPage() {
           //     View Profile
           //   </a>
           // )}
-        />
-      </div>
+          />
+        </div>
       </div>
 
       {/* PAGINATION FOOTER */}
@@ -107,7 +109,7 @@ export default function ProductsPage() {
           </button>
         </div>
       </div>
-      
+
     </AdminLayout>
   );
 }

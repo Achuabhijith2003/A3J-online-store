@@ -9,6 +9,7 @@ import './App.css'
 import LoginPage from './Admin/Auth/Login.tsx';
 import Dashboard from './Admin/pages/dashboard.tsx';
 import ProductsPage from './Admin/pages/Product.tsx';
+import AddProductPage from './Admin/pages/addproduct.tsx';
 import OrdersPage from './Admin/pages/order.tsx';
 import CustomersPage from './Admin/pages/custemer.tsx';
 // import { Layout } from './components/layout/admin.tsx';
@@ -54,6 +55,7 @@ export default function App() {
         <Route path="/admin/login" element={<LoginPage />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/products" element={<ProductsPage />} />
+        <Route path="/admin/products/addproduct" element={<AddProductPage />} />
         <Route path="/admin/orders" element={<OrdersPage />} />
         <Route path="/admin/customers" element={<CustomersPage />} />
 
