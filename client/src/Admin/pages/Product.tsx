@@ -1,9 +1,11 @@
+import { useState, useEffect } from 'react';
 import {
   Search,
   Bell,
   Plus,
   ChevronLeft,
   ChevronRight,
+  Loader2
 } from 'lucide-react';
 
 import { AdminLayout } from './layout/overview';
@@ -11,43 +13,88 @@ import { Table } from '../../components/Table.tsx';
 import { StatusBadge } from "../../components/status";
 import { useNavigate } from "react-router-dom";
 
-
+// Update interface to match the database backend structure
 interface Product {
   id: string;
   name: string;
-  price: string;
+  price: number;
   stock: number;
   status: string;
-  img: string;
+  image_url?: string;
 }
 
 const ProductColumns = [
   {
     header: 'Name',
     accessor: 'name',
-    render: (Product: Product) => (
+    render: (product: Product) => (
       <div className="flex items-center gap-4">
-        <img src={Product.img} alt={Product.name} className="w-10 h-10 rounded-sm object-cover flex-shrink-0" />
-        <span className="font-medium text-black">{Product.name}</span>
+        <div className="w-10 h-10 rounded-sm overflow-hidden flex-shrink-0 bg-gray-100 border border-gray-200">
+          {product.image_url ? (
+             <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+          ) : (
+             <div className="w-full h-full flex items-center justify-center text-gray-400 text-[10px] uppercase font-bold tracking-tighter">No Img</div>
+          )}
+        </div>
+        <span className="font-medium text-black">{product.name}</span>
       </div>
     )
   },
-  { header: 'SKU', accessor: 'id', render: (c: Product) => <span className="text-gray-500">{c.id}</span> },
-  { header: 'Stock', accessor: 'stock', align: 'right' as const, render: (c: Product) => <span className="text-gray-700 text-base">{c.stock}</span> },
-  { header: 'Price', accessor: 'price', align: 'right' as const, render: (c: Product) => <span className="font-semibold text-black text-base">{c.price}</span> },
-  { header: 'Status', accessor: 'status', render: (c: Product) => <StatusBadge status={c.status} /> },
-];
-
-
-const PRODUCTS = [
-  { id: 'SKU-001', name: 'Minimalist White Chair', price: '$249.00', stock: 45, status: 'Active', img: 'https://images.unsplash.com/photo-1506459225024-1428097a7e18?w=150&q=80&fit=crop' },
-  { id: 'SKU-002', name: 'Black Ceramic Vase', price: '$89.00', stock: 3, status: 'Active', img: 'https://images.unsplash.com/photo-1610715936287-6c2ad208cdbf?w=150&q=80&fit=crop' },
-  { id: 'SKU-003', name: 'Monochrome Wool Throw', price: '$120.00', stock: 0, status: 'Draft', img: 'https://images.unsplash.com/photo-1580870059816-5544d6db537d?w=150&q=80&fit=crop' },
-  { id: 'SKU-004', name: 'Concrete Table Lamp', price: '$175.00', stock: 12, status: 'Active', img: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=150&q=80&fit=crop' },
+  { 
+    header: 'SKU / ID', 
+    accessor: 'id', 
+    render: (c: Product) => <span className="text-gray-500">{(c.id || '').substring(0, 8)}...</span> 
+  },
+  { 
+    header: 'Stock', 
+    accessor: 'stock', 
+    align: 'right' as const, 
+    render: (c: Product) => <span className="text-gray-700 text-base">{c.stock}</span> 
+  },
+  { 
+    header: 'Price', 
+    accessor: 'price', 
+    align: 'right' as const, 
+    render: (c: Product) => <span className="font-semibold text-black text-base">${Number(c.price).toFixed(2)}</span> 
+  },
+  { 
+    header: 'Status', 
+    accessor: 'status', 
+    render: (c: Product) => <StatusBadge status={c.status || 'Draft'} /> 
+  },
 ];
 
 export default function ProductsPage() {
   const navigate = useNavigate();
+  
+  // State to hold data from the API
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  // Fetch products when the component loads
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:10000/api/products');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+
+        const data = await response.json();
+        // Set the products from the API response
+        setProducts(data.products || []);
+      } catch (err: unknown) {
+        console.error("Error fetching products:", err);
+        setError(err instanceof Error ? err.message : 'An unknown error occurred');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // Define what goes on the right side of the header for this specific page
   const headerActions = (
@@ -74,41 +121,52 @@ export default function ProductsPage() {
             className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-sm bg-white focus:border-black focus:ring-1 focus:ring-black outline-none text-sm transition-all placeholder:text-gray-400"
           />
         </div>
-        <button className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-sm text-sm font-medium hover:bg-gray-800 transition-colors" onClick={() => navigate("/admin/products/addproduct")}>
+        <button 
+          onClick={() => navigate("/admin/products/addproduct")}
+          className="flex items-center gap-2 bg-black text-white px-5 py-2.5 rounded-sm text-sm font-medium hover:bg-gray-800 transition-colors"
+        >
           <Plus size={16} />
           Add Product
         </button>
       </div>
 
       {/* TABLE CONTAINER */}
-      <div className="border border-gray-200 rounded-sm overflow-x-auto bg-white">
-        <div className="border border-gray-200 rounded-sm overflow-x-auto bg-white">
+      <div className="border border-gray-200 rounded-sm overflow-x-auto bg-white min-h-[400px]">
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center h-[400px] text-gray-500">
+            <Loader2 className="w-8 h-8 animate-spin mb-4 text-black" />
+            <p className="text-sm font-medium">Loading inventory...</p>
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center h-[400px] text-red-500">
+            <p className="text-sm font-medium">Error: {error}</p>
+          </div>
+        ) : products.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-[400px] text-gray-500">
+            <p className="text-sm font-medium">No products found. Add a new product to get started.</p>
+          </div>
+        ) : (
           <Table
-            data={PRODUCTS}
+            data={products}
             columns={ProductColumns}
-
-          // Optional: Pass an action button or link
-          // actions={(customer) => (
-          //   <a href={`/customers/${customer}`} className="text-blue-600 hover:underline">
-          //     View Profile
-          //   </a>
-          // )}
           />
-        </div>
+        )}
       </div>
 
       {/* PAGINATION FOOTER */}
-      <div className="flex justify-between items-center mt-6 text-sm text-gray-500">
-        <span>Showing 1 to 4 of 48 results</span>
-        <div className="flex items-center gap-2">
-          <button className="p-1 hover:text-black transition-colors disabled:opacity-50">
-            <ChevronLeft size={18} />
-          </button>
-          <button className="p-1 hover:text-black transition-colors">
-            <ChevronRight size={18} />
-          </button>
+      {!isLoading && products.length > 0 && (
+        <div className="flex justify-between items-center mt-6 text-sm text-gray-500">
+          <span>Showing 1 to {products.length} of {products.length} results</span>
+          <div className="flex items-center gap-2">
+            <button className="p-1 hover:text-black transition-colors disabled:opacity-50" disabled>
+              <ChevronLeft size={18} />
+            </button>
+            <button className="p-1 hover:text-black transition-colors" disabled>
+              <ChevronRight size={18} />
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
     </AdminLayout>
   );
