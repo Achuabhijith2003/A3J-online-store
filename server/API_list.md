@@ -28,13 +28,20 @@ curl -X POST http://localhost:10000/api/auth/forgot-password \
 ```
 ## Add Product
 ```
- curl -X POST http://localhost:10000/api/products/addproducts \
-  -H "Authorization: Bearer <ACESS_TOKEN> " \
-  -F "name=Monochrome Vase" \
-  -F "price=120.00" \
-  -F "stock=15" \
+curl -X POST http://localhost:10000/api/products/addproducts \
+  -H "Authorization: Bearer <ACCESS_TOKEN>" \
+  -F "name=Monochrome Trench" \
+  -F "description=Detailed description here" \
+  -F "price=85.00" \
+  -F "retail_price=45.00" \
+  -F "max_selling_price=120.00" \
+  -F "stock=50" \
   -F "status=Active" \
-  -F "image=@<IMAGE_PATH>"
+  -F "category=outerwear" \
+  -F "tags=[\"Minimalist\", \"Autumn 24\"]" \
+  -F "main_image=@/path/to/main_image.jpg" \
+  -F "sub_images=@/path/to/sub1.jpg" \
+  -F "sub_images=@/path/to/sub2.jpg"
   ```
 ## Show Product
 ```

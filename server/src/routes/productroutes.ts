@@ -24,7 +24,10 @@ router.post(
   '/addproducts', 
   requireAuth, 
   requirePermission(['write:products']), 
-  upload.single('image'), 
+  upload.fields([
+    { name: 'main_image', maxCount: 1 },
+    { name: 'sub_images', maxCount: 5 }
+  ]), 
   createProductHandler
 );
 

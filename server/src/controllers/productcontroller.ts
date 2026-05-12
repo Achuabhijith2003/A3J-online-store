@@ -4,32 +4,67 @@ import logger from '../utils/logger.js';
 
 export const createProductHandler = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, description, price, stock, status } = req.body;
-    const file = req.file;
+    const { 
+      name, 
+      description, 
+      price, 
+      retail_price, 
+      max_selling_price, 
+      stock, 
+      status, 
+      category, 
+      tags 
+    } = req.body;
+
+    // files will be an object because of upload.fields()
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
     if (!name || !price || !stock) {
       res.status(400).json({ error: 'Name, price, and stock are required fields.' });
       return;
     }
 
-    let imageUrl = '';
+    let main_image_url = '';
+    let sub_images_urls: string[] = [];
 
-    if (file) {
-      imageUrl = await productModel.uploadProductImage(
-        file.buffer, 
-        file.originalname, 
-        file.mimetype
+    // Process Main Image
+    if (files?.['main_image']?.[0]) {
+      const file = files['main_image'][0];
+      main_image_url = await productModel.uploadProductImage(file.buffer, file.originalname, file.mimetype);
+      logger.info(`Main image uploaded successfully: ${main_image_url}`);
+    }
+
+    // Process Sub Images
+    if (files?.['sub_images']?.length) {
+      const uploadPromises = files['sub_images'].map(file => 
+        productModel.uploadProductImage(file.buffer, file.originalname, file.mimetype)
       );
-      logger.info(`Image uploaded successfully: ${imageUrl}`);
+      sub_images_urls = await Promise.all(uploadPromises);
+      logger.info(`Uploaded ${sub_images_urls.length} sub images.`);
+    }
+
+    // Parse tags (incoming as a JSON string from frontend FormData)
+    let parsedTags: string[] = [];
+    if (tags) {
+      try {
+        parsedTags = JSON.parse(tags);
+      } catch (e) {
+        parsedTags = [];
+      }
     }
 
     const newProduct = await productModel.createProduct({
       name,
       description,
       price: parseFloat(price),
+      retail_price: retail_price ? parseFloat(retail_price) : undefined,
+      max_selling_price: max_selling_price ? parseFloat(max_selling_price) : undefined,
       stock: parseInt(stock, 10),
       status: status || 'Draft',
-      image_url: imageUrl,
+      category: category,
+      tags: parsedTags,
+      main_image_url,
+      sub_images_urls
     });
 
     logger.info(`Product created successfully: ${newProduct.id}`);
@@ -45,8 +80,7 @@ export const createProductHandler = async (req: Request, res: Response): Promise
   }
 };
 
-
-// Handle fetching all products (NEW)
+// Handle fetching all products
 export const getAllProductsHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const products = await productModel.getAllProducts();
@@ -79,5 +113,6 @@ export const getSingleProductHandler = async (req: Request, res: Response): Prom
 
   } catch (error: any) {
     logger.error(`Error fetching single product:`,error);
+    res.status(500).json({ error: 'Internal server error' });
   } 
 }

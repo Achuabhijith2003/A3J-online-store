@@ -4,14 +4,18 @@ export interface ProductData {
   name: string;
   description?: string;
   price: number;
+  retail_price?: number;
+  max_selling_price?: number;
   stock: number;
   status: string;
-  image_url?: string;
+  category?: string;
+  tags?: string[];
+  main_image_url?: string;
+  sub_images_urls?: string[];
 }
 
 // 1. Upload the image to Supabase Storage
 export const uploadProductImage = async (fileBuffer: Buffer, fileName: string, mimeType: string): Promise<string> => {
-  // Generate a unique filename to prevent overwriting
   const uniqueFileName = `${Date.now()}-${fileName}`;
 
   const { data, error } = await supabase.storage
@@ -25,7 +29,6 @@ export const uploadProductImage = async (fileBuffer: Buffer, fileName: string, m
     throw new Error(`Storage Error: ${error.message}`);
   }
 
-  // Get the public URL to save in the database
   const { data: { publicUrl } } = supabase.storage
     .from('product-images')
     .getPublicUrl(uniqueFileName);
@@ -38,7 +41,7 @@ export const createProduct = async (productData: ProductData) => {
   const { data, error } = await supabase
     .from('products')
     .insert([productData])
-    .select() // Return the created row
+    .select() 
     .single();
 
   if (error) {
@@ -48,13 +51,12 @@ export const createProduct = async (productData: ProductData) => {
   return data;
 };
 
-
 // 3. Fetch all products from the database
 export const getAllProducts = async () => {
   const { data, error } = await supabase
     .from('products')
     .select('*')
-    .order('created_at', { ascending: false }); // Newest products show up first
+    .order('created_at', { ascending: false }); 
 
   if (error) {
     throw new Error(`Database Error: ${error.message}`);
