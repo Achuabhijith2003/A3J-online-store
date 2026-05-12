@@ -20,7 +20,7 @@ interface Product {
   price: number;
   stock: number;
   status: string;
-  image_url?: string;
+  main_image_url?: string;
 }
 
 const ProductColumns = [
@@ -30,8 +30,8 @@ const ProductColumns = [
     render: (product: Product) => (
       <div className="flex items-center gap-4">
         <div className="w-10 h-10 rounded-sm overflow-hidden flex-shrink-0 bg-gray-100 border border-gray-200">
-          {product.image_url ? (
-             <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
+          {product.main_image_url ? (
+             <img src={product.main_image_url} alt={product.name} className="w-full h-full object-cover" />
           ) : (
              <div className="w-full h-full flex items-center justify-center text-gray-400 text-[10px] uppercase font-bold tracking-tighter">No Img</div>
           )}

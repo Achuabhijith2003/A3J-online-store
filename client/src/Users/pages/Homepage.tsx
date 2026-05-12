@@ -1,12 +1,47 @@
-// import  { useState } from 'react';
-import {  ArrowRight } from 'lucide-react';
+import  { useState, useEffect } from 'react';
+import { ArrowRight,  Loader2 } from 'lucide-react';
+
+// Define the Product interface matching your backend schema
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  main_image_url?: string;
+}
 
 export default function Home() {
-  // Mock authentication state to demonstrate the two header types
-//   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Fetch products from the backend on component mount
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:10000/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const data = await response.json();
+        setProducts(data.products || []);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  // Filter products based on the search query
+  const filteredProducts = products.filter(p => 
+    p.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">
+      
       {/* ==========================================
           HERO SECTION
       ========================================== */}
@@ -68,41 +103,75 @@ export default function Home() {
         </section>
 
         {/* ==========================================
-            NEW ARRIVALS
+            NEW ARRIVALS (Now dynamic and searchable)
         ========================================== */}
         <section className="py-20 md:py-28 border-b border-gray-100">
-          <div className="flex justify-between items-end mb-12">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight uppercase">New Arrivals</h2>
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight uppercase">
+                {searchQuery ? 'Search Results' : 'New Arrivals'}
+              </h2>
               <p className="text-xs text-gray-500 tracking-widest uppercase mt-2">Latest Drop: 001</p>
             </div>
-            <a href="#" className="text-xs font-semibold tracking-widest uppercase hover:text-gray-500 transition-colors flex items-center gap-2">
-              View All <ArrowRight size={14} />
-            </a>
+            
+            {/* Local Search Bar & Actions */}
+            <div className="flex items-center gap-4 w-full md:w-auto">
+              {/* <div className="relative w-full md:w-72">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                <input 
+                  type="text" 
+                  placeholder="Search products..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full border border-gray-200 py-2.5 pl-10 pr-4 rounded-sm text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
+                />
+              </div> */}
+              <a href="#" className="hidden md:flex text-xs font-semibold tracking-widest uppercase hover:text-gray-500 transition-colors items-center gap-2 whitespace-nowrap">
+                View All <ArrowRight size={14} />
+              </a>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { name: 'Digitalist Cotton Tee', price: '$85.00', img: 'https://images.unsplash.com/photo-1550614000-4b95d4edc617?w=600&q=80' },
-              { name: 'Monolith Series II Watch', price: '$450.00', img: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&q=80' },
-              { name: 'Structure Pleated Trousers', price: '$165.00', img: 'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80' },
-              { name: 'Void Technical Sneaker', price: '$260.00', img: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=600&q=80' }
-            ].map((product, idx) => (
-              <a key={idx} href="#" className="group block cursor-pointer">
-                <div className="aspect-[4/5] bg-gray-100 overflow-hidden rounded-sm mb-4 relative">
-                  <img 
-                    src={product.img} 
-                    alt={product.name} 
-                    className="w-full h-full object-cover grayscale mix-blend-multiply group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
-                </div>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-black truncate mb-1">
-                  {product.name}
-                </h3>
-                <p className="text-sm text-gray-600 font-medium">{product.price}</p>
-              </a>
-            ))}
+            {isLoading ? (
+              <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
+                <Loader2 className="w-8 h-8 animate-spin mb-4 text-black" />
+                <p className="text-sm font-medium uppercase tracking-widest">Loading Collection...</p>
+              </div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
+                <p className="text-sm font-medium uppercase tracking-widest mb-4">No products found matching "{searchQuery}"</p>
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  className="border border-gray-300 text-black px-6 py-2 text-xs font-bold uppercase tracking-widest rounded-sm hover:bg-gray-50 transition-colors"
+                >
+                  Clear Search
+                </button>
+              </div>
+            ) : (
+              filteredProducts.map((product) => (
+                <a key={product.id} href={`/product/${product.id}`} className="group block cursor-pointer">
+                  <div className="aspect-[4/5] bg-gray-100 overflow-hidden rounded-sm mb-4 relative flex items-center justify-center">
+                    {product.main_image_url ? (
+                      <img 
+                        src={product.main_image_url} 
+                        alt={product.name} 
+                        className="w-full h-full object-cover grayscale mix-blend-multiply group-hover:scale-105 transition-transform duration-700"
+                      />
+                    ) : (
+                      <span className="text-gray-400 text-xs font-bold uppercase tracking-widest">No Image</span>
+                    )}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                  </div>
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-black truncate mb-1">
+                    {product.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 font-medium">
+                    ${Number(product.price).toFixed(2)}
+                  </p>
+                </a>
+              ))
+            )}
           </div>
         </section>
 

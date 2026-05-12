@@ -41,7 +41,7 @@ export default function App() {
 
         {/* PUBLIC STOREFRONT ROUTES */}
         <Route path="/" element={<UserLayout><Home /></UserLayout>} />
-        <Route path="/products" element={<UserLayout><ProductDetails /></UserLayout>} />
+        <Route path="/product/:id" element={<UserLayout><ProductDetails /></UserLayout>} />
         <Route path="/cart" element={<UserLayout><CartPage /></UserLayout>} />
         <Route path="/checkout" element={<UserLayout><Checkout /></UserLayout>} />
 
