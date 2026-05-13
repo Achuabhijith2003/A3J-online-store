@@ -2,25 +2,25 @@
 
 ## API health check.
 ```
-curl http://localhost:10000/api/health
+curl /api/health
 ```
 
 ## user registeration
 ```
-curl -X POST http://localhost:10000/api/auth/register \
+curl -X POST /api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email": "new.customer@example.com", "password": "SecurePassword123!"}'
   ```
 
 ## Login as admin
 ```
-curl -X POST http://localhost:10000/api/auth/login \
+curl -X POST /api/auth/login \
 -H "Content-Type: application/json" \
 -d '{"email":"jrdevloper2003@gmail.com", "password":"A3JAbhijith"}'
 ```
 ## Reset password
 ```
-curl -X POST http://localhost:10000/api/auth/forgot-password \
+curl -X POST /api/auth/forgot-password \
   -H "Content-Type: application/json" \
   -d '{"email": "your.registered.email@example.com"}'
 
@@ -28,7 +28,7 @@ curl -X POST http://localhost:10000/api/auth/forgot-password \
 ```
 ## Add Product
 ```
-curl -X POST http://localhost:10000/api/products/addproducts \
+curl -X POST /api/products/addproducts \
   -H "Authorization: Bearer <ACCESS_TOKEN>" \
   -F "name=Monochrome Trench" \
   -F "description=Detailed description here" \
@@ -45,19 +45,19 @@ curl -X POST http://localhost:10000/api/products/addproducts \
   ```
 ## Show Product
 ```
-curl http://localhost:10000/api/products
+curl /api/products
 ```
 ## show single product
 ```
-curl -X GET http://localhost:10000/api/products/YOUR_PRODUCT_ID_HERE
+curl -X GET /api/products/YOUR_PRODUCT_ID_HERE
 
-Because it is a public GET route, you can also paste `http://localhost:10000/api/products/YOUR_PRODUCT_ID_HERE` directly into your web browser to see the product details!
+Because it is a public GET route, you can also paste `/api/products/YOUR_PRODUCT_ID_HERE` directly into your web browser to see the product details!
 ```
 
 
 ## Add to cart
 ```
-curl -X POST http://localhost:10000/api/cart/add \
+curl -X POST /api/cart/add \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -H "Content-Type: application/json" \
   -d '{"productId": "a0c01d06-812f-4136-8c8a-47af29b27f84", "quantity": 1}'
@@ -68,13 +68,13 @@ If you run it twice, it will automatically update the quantity to 2 instead of c
 ## Show Cart
 
 ```
-curl -X GET http://localhost:10000/api/cart \
+curl -X GET /api/cart \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
 ## Update Cart
 ```
-curl -X PUT http://localhost:10000/api/cart/update \
+curl -X PUT /api/cart/update \
   -H "Authorization: Bearer YOUR_TOKEN_HERE" \
   -H "Content-Type: application/json" \
   -d '{"productId": "YOUR_PRODUCT_ID_HERE", "quantity": 2}'
@@ -82,7 +82,7 @@ curl -X PUT http://localhost:10000/api/cart/update \
 
 ## Delete Cart
 ```
-curl -X DELETE http://localhost:10000/api/cart/remove/YOUR_PRODUCT_ID_HERE \
+curl -X DELETE /api/cart/remove/YOUR_PRODUCT_ID_HERE \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 

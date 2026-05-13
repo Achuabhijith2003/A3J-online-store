@@ -9,7 +9,7 @@ export default defineConfig({
     // This tells Vite: "If a request starts with /api, send it to port 10000!"
     proxy: {
       '/api': {
-        target: 'http://localhost:10000',
+        target: '',
         changeOrigin: true,
       }
     }

@@ -112,7 +112,7 @@ export default function AddProductPage() {
       });
 
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:10000/api/products/addproducts', {
+      const response = await fetch('/api/products/addproducts', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
