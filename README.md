@@ -33,3 +33,21 @@
 ├── Dockerfile             # The "Recipe" for Render
 └── package.json           # Root scripts to run both apps
 ```
+
+# 📄 API List
+
+
+
+# 🐬 Docker 
+
+## build the docker image 
+
+```
+docker build -t a3j-app .
+```
+
+## run the docker image
+
+```
+docker run -p 10000:10000 --env-file server/.env a3j-app
+```
