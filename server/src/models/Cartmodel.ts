@@ -2,16 +2,14 @@ import { supabase } from '../config/supabase.js';
 
 // 1. Add or Update an item in the cart
 export const addToCart = async (userId: string, productId: string, quantity: number) => {
-  // First, check if the user already has this product in their cart
   const { data: existingItem } = await supabase
     .from('cart_items')
     .select('*')
     .eq('user_id', userId)
     .eq('product_id', productId)
-    .single();
+    .maybeSingle(); // FIX: maybeSingle() doesn't crash if 0 rows are found!
 
   if (existingItem) {
-    // If it exists, just update the quantity!
     const { data, error } = await supabase
       .from('cart_items')
       .update({ quantity: existingItem.quantity + quantity })
@@ -22,7 +20,6 @@ export const addToCart = async (userId: string, productId: string, quantity: num
     if (error) throw new Error(`Database Error: ${error.message}`);
     return data;
   } else {
-    // If it doesn't exist, insert a brand new row
     const { data, error } = await supabase
       .from('cart_items')
       .insert([{ user_id: userId, product_id: productId, quantity }])
@@ -36,7 +33,6 @@ export const addToCart = async (userId: string, productId: string, quantity: num
 
 // 2. Get all cart items for a specific user
 export const getCartItems = async (userId: string) => {
-  // We use Supabase relationships to fetch the product details (name, price, image) at the same time!
   const { data, error } = await supabase
     .from('cart_items')
     .select(`
@@ -46,7 +42,7 @@ export const getCartItems = async (userId: string) => {
       products (
         name,
         price,
-        image_url
+        main_image_url
       )
     `)
     .eq('user_id', userId);
@@ -55,24 +51,27 @@ export const getCartItems = async (userId: string) => {
   return data;
 };
 
-
 // 3. Update exact quantity (decrease/increase)
 export const updateCartItemQuantity = async (userId: string, productId: string, quantity: number) => {
-  // If the quantity drops to 0 or below, just delete the item from the cart automatically
   if (quantity <= 0) {
     return await removeFromCart(userId, productId);
   }
 
+  // FIX: Removed .single() so it doesn't crash if the item isn't in the cart
   const { data, error } = await supabase
     .from('cart_items')
     .update({ quantity })
     .eq('user_id', userId)
     .eq('product_id', productId)
-    .select()
-    .single();
+    .select();
 
   if (error) throw new Error(`Database Error: ${error.message}`);
-  return data;
+  
+  if (!data || data.length === 0) {
+    throw new Error(`Item not found in cart. Cannot update quantity.`);
+  }
+
+  return data[0];
 };
 
 // 4. Remove an item entirely

@@ -11,6 +11,35 @@ export const UserLayout = ({ children }: { children: React.ReactNode }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // State for cart total items
+  const [totalItems, setTotalItems] = useState(0);
+
+  // Fetch cart count on load or when auth state changes
+  useEffect(() => {
+    const fetchCartItemCount = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        const response = await fetch('/api/cart', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          // Calculate the total quantity across all distinct products
+          const count = data.cartItems.reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0);
+          setTotalItems(count);
+        }
+      } catch (error) {
+        console.error("Failed to fetch cart item count", error);
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchCartItemCount();
+    }
+  }, [isLoggedIn]);
+
   // Close the dropdown when clicking anywhere outside of it
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -96,9 +125,15 @@ export const UserLayout = ({ children }: { children: React.ReactNode }) => {
           </nav>
 
           <div className="flex items-center gap-4 border-l border-gray-200 pl-6 ml-2">
-            <button className="text-black hover:text-gray-600 transition-colors">
+            {/* Added relative positioning to keep the badge pinned to the icon */}
+            <a href="/cart" className="text-black hover:text-gray-600 transition-colors relative" >
               <ShoppingBag size={20} strokeWidth={1.5} />
-            </button>
+              {totalItems > 0 && (
+                <span className="absolute -top-1.5 -right-2 bg-black text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </a>
             
             {/* Conditional Auth Rendering */}
             {isLoggedIn ? (
